@@ -48,10 +48,11 @@ class App extends Component {
 
   _handleInputChange = (event) => {
     const { value } = event.target;
-
+    const matches = value.length ? this._getQueryMatches(value) : [];
+    
     this.setState({
       searchQuery: value,
-      queryMatches: this._getQueryMatches(value)
+      queryMatches: matches
     });
   }
 
@@ -116,6 +117,7 @@ class App extends Component {
     return (
       <div className="App">
         <header className="app-header">
+          <div className="title">Typeahead</div>
           <input
             className="search-input"
             ref={ref => this.inputRef = ref}
