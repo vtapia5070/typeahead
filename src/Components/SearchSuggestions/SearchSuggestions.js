@@ -15,6 +15,7 @@ const SearchSuggestions = (props) => {
                 'is-active': props.activeItemIndex === index
               }
             )}
+            onClick={(event) => props.onSuggectionClick(event, suggestion)}
           >
             {suggestion}
           </li>

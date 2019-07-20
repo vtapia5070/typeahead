@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import SearchInput from '../Components/SearchInput/SearchInput';
+// import SearchInput from '../Components/SearchInput/SearchInput';
 import SearchSuggestions from '../Components/SearchSuggestions/SearchSuggestions';
 
 import './App.scss';
@@ -11,7 +11,8 @@ class App extends Component {
     this.state = {
       searchQuery: '',
       queryMatches: [],
-      activeSuggestionIndex: null
+      activeSuggestionIndex: null,
+      isSuggestionListVisible: true
     };
   }
 
@@ -30,11 +31,18 @@ class App extends Component {
     if (!event.target.className.includes('suggestion-item') && activeSuggestionIndex !== null) {
       this.setState({ activeSuggestionIndex: null })
     }
+     else if (
+      !event.target.className.includes('search-suggestions-item') &&
+      event.target !== this.inputRef
+    ) {
+      this.setState({ isSuggestionListVisible: false, activeSuggestionIndex: null });
+    }
   }
 
   _getQueryMatches (searchStr) {
     return this.props.fruits.filter(fruit => {
-      return fruit.toLowerCase().includes(searchStr.toLowerCase())
+      return fruit.toLowerCase().includes(searchStr.toLowerCase()) &&
+        fruit.toLowerCase() !== searchStr.toLowerCase();
     })
   }
 
@@ -44,11 +52,17 @@ class App extends Component {
     this.setState({
       searchQuery: value,
       queryMatches: this._getQueryMatches(value)
-    })
+    });
   }
 
-  _handleSuggestionClick = (suggestion) => {
-    this.setState({ searchQuery: suggestion })
+  _handleSuggestionClick = (event, suggestion) => {
+    this.setState({
+      searchQuery: suggestion,
+      isSuggestionListVisible: false,
+      activeSuggestionIndex: null
+    });
+
+    event.preventDefault();
   }
 
   _handleArrowPush = (event) => {
@@ -83,25 +97,42 @@ class App extends Component {
     }
 
     event.preventDefault();
+  }
 
+  // NOTE: onClick (vs onFocus) is neccessary to prevent _handleDocumentClick
+  // from executing
+  _handleInputFocus = (event) => {
+    if (this.state.searchQuery.length) {
+      this.setState({
+        isSuggestionListVisible: true,
+        queryMatches: this._getQueryMatches(this.state.searchQuery)
+      });
+    }
+
+    event.preventDefault();
   }
 
   render () {
     return (
-      <div className="App" ref={appNode => this.appNode = appNode}>
+      <div className="App">
         <header className="app-header">
-          <SearchInput
+          <input
+            className="search-input"
+            ref={ref => this.inputRef = ref}
             value={this.state.searchQuery}
             onChange={this._handleInputChange}
-            onArrowPush={this._handleArrowPush}
+            onKeyUp={this._handleArrowPush}
+            onClick={this._handleInputFocus}
           />
         </header>
         <section className="app-content">
+        {this.state.isSuggestionListVisible && (
           <SearchSuggestions
             suggestions={this.state.queryMatches}
             activeItemIndex={this.state.activeSuggestionIndex}
             onSuggectionClick={this._handleSuggestionClick}
           />
+        )}
         </section>
       </div>
     );
