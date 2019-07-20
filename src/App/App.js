@@ -17,10 +17,19 @@ class App extends Component {
 
   componentDidMount () {
     // add event listener to reset activeSuggestionIndex to null if the target is not a suggestion item
+    document.addEventListener('click', this._handleDocumentClick);
   }
 
   componentWillUnmount () {
     // unregister event listener
+    document.removeEventListener('click');
+  }
+
+  _handleDocumentClick = (event) => {
+    const { activeSuggestionIndex } = this.state;
+    if (!event.target.className.includes('suggestion-item') && activeSuggestionIndex !== null) {
+      this.setState({ activeSuggestionIndex: null })
+    }
   }
 
   _getQueryMatches (searchStr) {
@@ -48,7 +57,6 @@ class App extends Component {
     const upArrowKey = 38;
 
     let currentIndex;
-    // console.log('activeSuggen', activeSuggestionIndex)
     if (event.keyCode === downArrowKey) {
       // if no items are focused or the last item is focus, focus on the first item
       if (activeSuggestionIndex === null || activeSuggestionIndex === queryMatches.length - 1) {
@@ -57,7 +65,6 @@ class App extends Component {
       } else {
         currentIndex = activeSuggestionIndex + 1;
       }
-      console.log('downArrow index:', currentIndex)
       this.setState({ activeSuggestionIndex: currentIndex });
     }
 
@@ -72,7 +79,6 @@ class App extends Component {
       } else {
         currentIndex = activeSuggestionIndex - 1;
       }
-      console.log('upArrow index:', currentIndex)
       this.setState({ activeSuggestionIndex: currentIndex });
     }
 
@@ -82,7 +88,7 @@ class App extends Component {
 
   render () {
     return (
-      <div className="App">
+      <div className="App" ref={appNode => this.appNode = appNode}>
         <header className="app-header">
           <SearchInput
             value={this.state.searchQuery}
