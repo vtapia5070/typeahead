@@ -14,14 +14,19 @@ class App extends Component {
     };
   }
 
-  _getQueryMatches () {
+  _getQueryMatches (searchStr) {
     return this.props.fruits.filter(fruit => {
-      fruit.toLowerCase.includes(this.state.searchQuery.toLowerCase())
+      return fruit.toLowerCase().includes(searchStr.toLowerCase())
     })
   }
 
   _handleInputChange = (event) => {
-    this.setState({ searchQuery: event.target.value })
+    const { value } = event.target;
+
+    this.setState({
+      searchQuery: value,
+      queryMatches: this._getQueryMatches(value)
+    })
   }
 
   render () {
