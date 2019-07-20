@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-// import SearchInput from '../Components/SearchInput/SearchInput';
 import SearchSuggestions from '../Components/SearchSuggestions/SearchSuggestions';
 
 import './App.scss';
@@ -131,6 +130,7 @@ class App extends Component {
             suggestions={this.state.queryMatches}
             activeItemIndex={this.state.activeSuggestionIndex}
             onSuggectionClick={this._handleSuggestionClick}
+            searchQuery={this.state.searchQuery}
           />
         )}
         </section>

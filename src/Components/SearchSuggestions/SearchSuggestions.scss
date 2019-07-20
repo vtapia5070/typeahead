@@ -1,8 +1,16 @@
 .search-suggestions {
+  ul {
+    max-height: 300px;
+    overflow: auto;
+  }
 
   li {
     &.is-active {
       color: red;
     }
+  }
+
+  span {
+    color: yellow;
   }
 }
