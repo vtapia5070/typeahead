@@ -31,14 +31,13 @@ const getHighlightedSuggestion = (highlightedStr, suggestion) => {
 
     } else {
       modifiedList.push(str);
-    }
+    }    
   });
 
   return modifiedList;
 }
 
 const SearchSuggestions = (props) => {
-
   return (
     <div className="search-suggestions">
       <ul>

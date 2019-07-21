@@ -117,6 +117,8 @@ class App extends Component {
       <div className="App">
         <header className="app-header">
           <div className="title">Typeahead</div>
+        </header>
+        <section className="app-content">
           <input
             className="search-input"
             ref={ref => this.inputRef = ref}
@@ -125,16 +127,15 @@ class App extends Component {
             onKeyUp={this._handleArrowPush}
             onClick={this._handleInputFocus}
           />
-        </header>
-        <section className="app-content">
-        {this.state.isSuggestionListVisible && (
-          <SearchSuggestions
-            suggestions={this.state.queryMatches}
-            activeItemIndex={this.state.activeSuggestionIndex}
-            onSuggectionClick={this._handleSuggestionClick}
-            searchQuery={this.state.searchQuery}
-          />
-        )}
+          {this.state.isSuggestionListVisible &&
+            !!this.state.queryMatches.length && (
+            <SearchSuggestions
+              suggestions={this.state.queryMatches}
+              activeItemIndex={this.state.activeSuggestionIndex}
+              onSuggectionClick={this._handleSuggestionClick}
+              searchQuery={this.state.searchQuery}
+            />
+          )}
         </section>
       </div>
     );
