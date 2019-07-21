@@ -16,12 +16,10 @@ class App extends Component {
   }
 
   componentDidMount () {
-    // add event listener to reset activeSuggestionIndex to null if the target is not a suggestion item
     document.addEventListener('click', this._handleDocumentClick);
   }
 
   componentWillUnmount () {
-    // unregister event listener
     document.removeEventListener('click');
   }
 
@@ -34,8 +32,17 @@ class App extends Component {
       !event.target.className.includes('search-suggestions-item') &&
       event.target !== this.inputRef
     ) {
-      this.setState({ isSuggestionListVisible: false, activeSuggestionIndex: null });
+      this._resetSearchSuggestions(this.state.searchQuery);
     }
+  }
+
+  _resetSearchSuggestions (query) {
+    this.setState({
+      searchQuery: query,
+      isSuggestionListVisible: false,
+      activeSuggestionIndex: null,
+      queryMatches: this._getQueryMatches(query)
+    });
   }
 
   _getQueryMatches (searchStr) {
@@ -51,24 +58,22 @@ class App extends Component {
     
     this.setState({
       searchQuery: value,
-      queryMatches: matches
+      queryMatches: matches,
+      isSuggestionListVisible: true
     });
   }
 
   _handleSuggestionClick = (event, suggestion) => {
-    this.setState({
-      searchQuery: suggestion,
-      isSuggestionListVisible: false,
-      activeSuggestionIndex: null
-    });
+    this._resetSearchSuggestions(suggestion)
 
     event.preventDefault();
   }
 
-  _handleArrowPush = (event) => {
+  _handleKeyUp = (event) => {
     const { activeSuggestionIndex, queryMatches } = this.state;
     const downArrowKey = 40;
     const upArrowKey = 38;
+    const enterKey = 13;
 
     let currentIndex;
     if (event.keyCode === downArrowKey) {
@@ -96,11 +101,15 @@ class App extends Component {
       this.setState({ activeSuggestionIndex: currentIndex });
     }
 
+    if (event.keyCode === enterKey) {
+      this._resetSearchSuggestions(this.state.queryMatches[this.state.activeSuggestionIndex]);
+    }
+
     event.preventDefault();
   }
 
   // NOTE: onClick (vs onFocus) is neccessary to prevent _handleDocumentClick
-  // from executing
+  // from executing and resetting state
   _handleInputFocus = (event) => {
     if (this.state.searchQuery.length) {
       this.setState({
@@ -124,7 +133,7 @@ class App extends Component {
             ref={ref => this.inputRef = ref}
             value={this.state.searchQuery}
             onChange={this._handleInputChange}
-            onKeyUp={this._handleArrowPush}
+            onKeyUp={this._handleKeyUp}
             onClick={this._handleInputFocus}
           />
           {this.state.isSuggestionListVisible &&
