@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import SearchSuggestions from '../Components/SearchSuggestions/SearchSuggestions';
 
 import './App.scss';
@@ -26,7 +27,7 @@ class App extends Component {
   _handleDocumentClick = (event) => {
     const { activeSuggestionIndex } = this.state;
     if (!event.target.className.includes('suggestion-item') && activeSuggestionIndex !== null) {
-      this.setState({ activeSuggestionIndex: null })
+      this.setState({ activeSuggestionIndex: null });
     }
      else if (
       !event.target.className.includes('search-suggestions-item') &&
@@ -49,7 +50,7 @@ class App extends Component {
     return this.props.fruits.filter(fruit => {
       return fruit.toLowerCase().includes(searchStr.toLowerCase()) &&
         fruit.toLowerCase() !== searchStr.toLowerCase();
-    })
+    });
   }
 
   _handleInputChange = (event) => {
@@ -64,7 +65,7 @@ class App extends Component {
   }
 
   _handleSuggestionClick = (event, suggestion) => {
-    this._resetSearchSuggestions(suggestion)
+    this._resetSearchSuggestions(suggestion);
 
     event.preventDefault();
   }
@@ -76,6 +77,7 @@ class App extends Component {
     const enterKey = 13;
 
     let currentIndex;
+
     if (event.keyCode === downArrowKey) {
       // if no items are focused or the last item is focus, focus on the first item
       if (activeSuggestionIndex === null || activeSuggestionIndex === queryMatches.length - 1) {
@@ -84,7 +86,11 @@ class App extends Component {
       } else {
         currentIndex = activeSuggestionIndex + 1;
       }
-      this.setState({ activeSuggestionIndex: currentIndex });
+      // TODO: prevent scroll when element is already in view
+      this.setState({ activeSuggestionIndex: currentIndex }, () => {
+        const element = ReactDOM.findDOMNode(this.appRef).getElementsByClassName(`suggestion-item-${currentIndex}`)[0];
+        element.scrollIntoView();
+      });
     }
 
     if (event.keyCode === upArrowKey) {      
@@ -98,7 +104,11 @@ class App extends Component {
       } else {
         currentIndex = activeSuggestionIndex - 1;
       }
-      this.setState({ activeSuggestionIndex: currentIndex });
+
+      this.setState({ activeSuggestionIndex: currentIndex }, () => {
+        const element = ReactDOM.findDOMNode(this.appRef).getElementsByClassName(`suggestion-item-${currentIndex}`)[0];
+        element.scrollIntoView();
+      });
     }
 
     if (event.keyCode === enterKey) {
@@ -123,7 +133,7 @@ class App extends Component {
 
   render () {
     return (
-      <div className="App">
+      <div className="App" ref={ref => this.appRef = ref}>
         <header className="app-header">
           <div className="title">Typeahead</div>
         </header>

@@ -44,7 +44,7 @@ const SearchSuggestions = (props) => {
         {props.suggestions.map((suggestion, index) => (
           <li
             key={`suggestions_${index}`}
-            className={classNames('suggestion-item',
+            className={classNames(`suggestion-item suggestion-item-${index}`,
               {
                 'is-active': props.activeItemIndex === index
               }
