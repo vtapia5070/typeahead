@@ -1,20 +1,21 @@
 .search-suggestions {
-  width: 60%;
   background-color: rgba(226,226,226, 0.1);
   border: 1px solid rgba(226,226,226, 0.1);
   border-radius: 2px;
   margin: 20px 0;
+  width: 60%;
 
   ul {
+    list-style-type: none;
     max-height: 300px;
     overflow: auto;
     padding-left: 0;
-    list-style-type: none;
   }
 
   li {
-    width: 100%;
+    cursor: pointer;
     padding: 6px 10px;
+    width: 100%;
 
     &.is-active, &:hover {
       background-color: rgba(213,213,213, 0.2);

@@ -118,8 +118,8 @@ class App extends Component {
     event.preventDefault();
   }
 
-  // NOTE: onClick (vs onFocus) is neccessary to prevent _handleDocumentClick
-  // from executing and resetting state
+  // NOTE: using onClick (vs onFocus) is neccessary to stop click event bubbling
+  // which will prevent _handleDocumentClick from executing and resetting state
   _handleInputFocus = (event) => {
     if (this.state.searchQuery.length) {
       this.setState({
