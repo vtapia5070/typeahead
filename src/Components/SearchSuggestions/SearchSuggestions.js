@@ -5,6 +5,7 @@ import './SearchSuggestions.scss';
 
 // If the suggestion begins with the search query, emphasize the matches str
 const getHighlightedSuggestion = (highlightedStr, suggestion) => {
+  if (!highlightedStr.length) return;
   const suggestionStrList = suggestion.split(' ');
   const modifiedList = [];
 

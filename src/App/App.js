@@ -89,7 +89,7 @@ class App extends Component {
       // TODO: prevent scroll when element is already in view
       this.setState({ activeSuggestionIndex: currentIndex }, () => {
         const element = ReactDOM.findDOMNode(this.appRef).getElementsByClassName(`suggestion-item-${currentIndex}`)[0];
-        element.scrollIntoView();
+        element && element.scrollIntoView();
       });
     }
 
@@ -107,7 +107,7 @@ class App extends Component {
 
       this.setState({ activeSuggestionIndex: currentIndex }, () => {
         const element = ReactDOM.findDOMNode(this.appRef).getElementsByClassName(`suggestion-item-${currentIndex}`)[0];
-        element.scrollIntoView();
+        element && element.scrollIntoView();
       });
     }
 

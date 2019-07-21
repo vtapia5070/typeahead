@@ -16,7 +16,7 @@
     width: 100%;
     padding: 6px 10px;
 
-    &.is-active {
+    &.is-active, &:hover {
       background-color: rgba(213,213,213, 0.2);
     }
   }
